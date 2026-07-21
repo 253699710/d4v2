@@ -3,12 +3,13 @@ EXEC ?= counter
 BUILD_DIR ?= build
 SRC_DIRS ?= src
 
-SRCS := $(shell find $(SRC_DIRS) -name *.cpp)
+# counter: alle cpp ausser InteractiveCounter
+SRCS := $(shell find $(SRC_DIRS) -name *.cpp | grep -v InteractiveCounter)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 CPPFLAGS ?= -MMD -MP
-LIBS := -Wl,-R../../build/ ../../build/libd4.a -lboost_program_options -lz -lgmpxx -lgmp 
+LIBS := -Wl,-R../../build/ ../../build/libd4.a ../../3rdParty/patoh/libpatoh.a ../../3rdParty/glucose-3.0/core/lib_glucose.a ../../3rdParty/flowCutter/libflowCutter.a ../../3rdParty/bipe/build/libbipe.a ../../3rdParty/bipe/3rdParty/glucose-3.0/core/libglucose_static.a -lboost_program_options -lz -lgmpxx -lgmp
 INCLUDES := -I../../
 
 c: $(BUILD_DIR)/$(EXEC)
@@ -28,9 +29,9 @@ $(BUILD_DIR)/$(EXEC)_static:	LDFLAGS += -static
 
 
 $(BUILD_DIR)/$(EXEC) $(BUILD_DIR)/$(EXEC)_profile $(BUILD_DIR)/$(EXEC)_debug $(BUILD_DIR)/$(EXEC)_static: $(OBJS) ../../build/libd4.a
-	@echo Linking: "$@ ( $(foreach f,$^,$(subst $(BUILD_DIR)/$(SRC_DIRS),,$f)) )"	
+	@echo Linking: "$@ ( $(foreach f,$^,$(subst $(BUILD_DIR)/$(SRC_DIRS),,$f)) )"
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS) $(INCLUDES) $(LIBS)
-	
+
 $(BUILD_DIR)/%.cpp.o: %.cpp
 	@echo Compiling: $<
 	@$(MKDIR_P) $(dir $@)
