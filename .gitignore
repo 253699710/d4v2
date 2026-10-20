@@ -15,3 +15,7 @@ CMakeFiles
 *.o[dr]
 3rdParty/glucose-3.0/core/depend.mk
 *.a
+# PaToH is proprietary (non-commercial research use only); obtain it from
+# http://cc.gatech.edu/~umit/software.html and place libpatoh.a + patoh.h here.
+3rdParty/patoh/
+3rdParty/patoh_mac/
